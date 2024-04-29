@@ -49,13 +49,22 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
     ]
 
     text = bo_preprocess(text)
-    sents_text = ""
 
+    sents_text = ""
     curr_sent = ""
+
+    found_other_lang, found_invalid_token = False, False
+
     tokenizer = get_bo_word_tokenizer()
     tokens = tokenizer.tokenize(text, split_affixes=False)
     for token in tokens:
+        """ if there are other language text, we dont need that sentence"""
         if token.chunk_type in skip_chunk_types:
+            found_other_lang = True
+            continue
+        """ if a token is invalid such as, we dont need that sentence"""
+        if token.pos == "NON_WORD":
+            found_invalid_token = True
             continue
         token_text = get_token_text(token)
         if any(punct in token_text for punct in opening_puncts):
@@ -65,7 +74,9 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
             curr_sent += "\n"
             """add the current sentence to the sents_text"""
             """reset the curr_sent to empty string"""
-            sents_text += curr_sent
+            if not found_other_lang and not found_invalid_token:
+                sents_text += curr_sent
+            found_other_lang, found_invalid_token = False, False
             curr_sent = ""
         else:
             curr_sent += token_text
@@ -78,6 +89,6 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
 
 
 if __name__ == "__main__":
-    sentence= """ ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། དང་པོ་ནི་དཔོན་བཙན་པོ་ནས་(བཀའ་རྒྱུད་ཁོ་ན་)གུ་གེ་བློ་ལྡན་ལ་བརྒྱུད།"""
+    sentence= """ ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ། ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། དང་པོ་ནི་དཔོན་བཙན་པོ་ནས་(བཀའ་རྒྱུད་ཁོ་ན་)གུ་གེ་བློ་ལྡན་ལ་བརྒྱུད།"""
     output = tokenize(sentence)
     print(output)
