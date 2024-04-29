@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "project_name"
+version = "0.0.1"
+authors = [
+  { name="OpenPecha", email="dev@openpecha.org" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pre-commit",
+]
+
+
+[project.urls]
+"Homepage" = "https://github.com/OpenPecha/openpecha-project-template"
+"Bug Tracker" = "https://github.com/OpenPecha/openpecha-project-template/issues"

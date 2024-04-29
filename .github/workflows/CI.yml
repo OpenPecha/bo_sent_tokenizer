@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"
+        
+    - name: Install dependencies
+      run: |
+        pip install -U pip
+        pip install .
+        pip install .[dev]
+        
+    - name: Test with pytest
+      run: PYTHONPATH=src pytest
+    
+    - name: Test Coverage
+      run: PYTHONPATH=src pytest --cov project_name
