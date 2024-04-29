@@ -1,6 +1,7 @@
 import re
 import botok
 
+from bo_sent_tokenizer.vars import SYMBOLS_TO_KEEP
 
 SENT_PER_LINE_STR = str  # sentence per line string
 bo_word_tokenizer = None
@@ -58,6 +59,10 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
     tokenizer = get_bo_word_tokenizer()
     tokens = tokenizer.tokenize(text, split_affixes=False)
     for token in tokens:
+        token_text = get_token_text(token)
+
+        if token_text in SYMBOLS_TO_KEEP:
+            continue
         """ if there are other language text, we dont need that sentence"""
         if token.chunk_type in skip_chunk_types:
             found_other_lang = True
@@ -66,7 +71,7 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
         if token.pos == "NON_WORD":
             found_invalid_token = True
             continue
-        token_text = get_token_text(token)
+        
         if any(punct in token_text for punct in opening_puncts):
             curr_sent += token_text.strip()
         elif any(punct in token_text for punct in closing_puncts):
@@ -89,6 +94,6 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
 
 
 if __name__ == "__main__":
-    sentence= """ ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ། ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། དང་པོ་ནི་དཔོན་བཙན་པོ་ནས་(བཀའ་རྒྱུད་ཁོ་ན་)གུ་གེ་བློ་ལྡན་ལ་བརྒྱུད།"""
+    sentence= """ ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ། ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་(Thomas)་ཟེར། དང་པོ་ནི་དཔོན་བཙན་པོ་ནས་(བཀའ་རྒྱུད་ཁོ་ན་)གུ་གེ་བློ་ལྡན་ལ་བརྒྱུད། རྒྱ་གར་ཧིན་དྷིའི་སྐད་ཡིག་ལ་གཅིག་ནི་एकཡིན་།"""
     output = tokenize(sentence)
     print(output)

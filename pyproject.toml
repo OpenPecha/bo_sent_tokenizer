@@ -17,6 +17,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+  "botok >= 0.8.12"
+]
 [project.optional-dependencies]
 dev = [
     "pytest",
