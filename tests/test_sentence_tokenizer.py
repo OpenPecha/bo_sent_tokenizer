@@ -1,6 +1,12 @@
 from bo_sent_tokenizer import tokenize
 
 def test_bo_sentence_tokenizer():
+    """ main test example"""
+    input_string = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\n ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། ཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།"
+    expected_output = 'ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\nཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\n'
+    output = tokenize(input_string)
+    assert output == expected_output
+
     """clean tibetan"""
     input_string = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།"
     expected_output = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\n"
