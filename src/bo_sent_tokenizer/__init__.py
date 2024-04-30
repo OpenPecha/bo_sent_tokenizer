@@ -2,6 +2,7 @@ import re
 import botok
 
 from bo_sent_tokenizer.vars import SYMBOLS_TO_KEEP
+from bo_sent_tokenizer.utils import SuppressOutput
 
 SENT_PER_LINE_STR = str  # sentence per line string
 bo_word_tokenizer = None
@@ -56,44 +57,40 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
 
     found_other_lang, found_invalid_token = False, False
 
-    tokenizer = get_bo_word_tokenizer()
-    tokens = tokenizer.tokenize(text, split_affixes=False)
-    for token in tokens:
-        token_text = get_token_text(token)
+    """ suppressing the outputs and warnings of the botok tokenizer"""
+    with SuppressOutput():
+        tokenizer = get_bo_word_tokenizer()
+        tokens = tokenizer.tokenize(text, split_affixes=False)
+        for token in tokens:
+            token_text = get_token_text(token)
 
-        if token_text in SYMBOLS_TO_KEEP:
-            continue
-        """ if there are other language text, we dont need that sentence"""
-        if token.chunk_type in skip_chunk_types:
-            found_other_lang = True
-            continue
-        """ if a token is invalid such as, we dont need that sentence"""
-        if token.pos == "NON_WORD":
-            found_invalid_token = True
-            continue
-        
-        if any(punct in token_text for punct in opening_puncts):
-            curr_sent += token_text.strip()
-        elif any(punct in token_text for punct in closing_puncts):
-            curr_sent += token_text.strip()
-            curr_sent += "\n"
-            """add the current sentence to the sents_text"""
-            """reset the curr_sent to empty string"""
-            if not found_other_lang and not found_invalid_token:
-                sents_text += curr_sent
-            found_other_lang, found_invalid_token = False, False
-            curr_sent = ""
-        else:
-            curr_sent += token_text
-
-
-    for fr, to in r_replace:
-        sents_text = re.sub(fr, to, sents_text)
-
-    return sents_text
+            if token_text in SYMBOLS_TO_KEEP:
+                continue
+            """ if there are other language text, we dont need that sentence"""
+            if token.chunk_type in skip_chunk_types:
+                found_other_lang = True
+                continue
+            """ if a token is invalid such as, we dont need that sentence"""
+            if token.pos == "NON_WORD":
+                found_invalid_token = True
+                continue
+            
+            if any(punct in token_text for punct in opening_puncts):
+                curr_sent += token_text.strip()
+            elif any(punct in token_text for punct in closing_puncts):
+                curr_sent += token_text.strip()
+                curr_sent += "\n"
+                """add the current sentence to the sents_text"""
+                """reset the curr_sent to empty string"""
+                if not found_other_lang and not found_invalid_token:
+                    sents_text += curr_sent
+                found_other_lang, found_invalid_token = False, False
+                curr_sent = ""
+            else:
+                curr_sent += token_text
 
 
-if __name__ == "__main__":
-    sentence= """ ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ། ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་(Thomas)་ཟེར། དང་པོ་ནི་དཔོན་བཙན་པོ་ནས་(བཀའ་རྒྱུད་ཁོ་ན་)གུ་གེ་བློ་ལྡན་ལ་བརྒྱུད། རྒྱ་གར་ཧིན་དྷིའི་སྐད་ཡིག་ལ་གཅིག་ནི་एकཡིན་།"""
-    output = tokenize(sentence)
-    print(output)
+        for fr, to in r_replace:
+            sents_text = re.sub(fr, to, sents_text)
+
+        return sents_text
