@@ -11,7 +11,7 @@
 
 ## Description
 
-Tibetan sentence tokenizer
+Tibetan sentence tokenizer designed specifically for data preparation.
 
 ## Project owner(s)
 
@@ -19,13 +19,31 @@ Tibetan sentence tokenizer
 
 - [@tenzin3](https://github.com/tenzin3)
 
-## Integrations
+## Installation 
 
-<!-- Add any intregrations here or delete `- []()` and write None-->
+```py
+pip install git+https://github.com/OpenPecha/bo_sent_tokenizer.git
+```
 
-None
-## Docs
+## Usage
+```py
+from bo_sent_tokenizer import tokenize
 
-<!-- Update the link to the docs -->
+text = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\n ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། ཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།"
 
-Read the docs [here](https://wiki.openpecha.org/#/dev/coding-guidelines).
+tokenized_text = tokenize(text)
+print(tokenized_text) #Output:> 'ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\nཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\n'
+
+
+```
+
+## Explanation 
+The text 'ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།' is clean Tibetan text.
+
+The text 'ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ།' contains an illegal token 'བབབབབབབབནམ'.
+
+The text 'ངའི་མིང་ལ་Thomas་ཟེར།' includes characters from another language.
+
+The text 'ཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།' contains non-Tibetan symbols '(', and ')'.
+
+If the text is clean, it is retained. If a sentence contains an illegal token or characters from another language, that sentence is excluded. If a sentence contains non-Tibetan symbols, these symbols are filtered out, and the sentence is retained.
