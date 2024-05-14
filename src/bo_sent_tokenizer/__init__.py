@@ -1,7 +1,7 @@
 import re
 import botok
 
-from bo_sent_tokenizer.vars import SYMBOLS_TO_KEEP
+from bo_sent_tokenizer.vars import SYMBOLS_TO_KEEP, OPENING_PUNCTS, CLOSING_PUNCTS
 from bo_sent_tokenizer.utils import SuppressOutput
 
 SENT_PER_LINE_STR = str  # sentence per line string
@@ -31,8 +31,7 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
             return token.text
 
     # fmt: off
-    opening_puncts = ['༁', '༂', '༃', '༄', '༅', '༆', '༇', '༈', '༉', '༊', '༑', '༒', '༺', '༼', '༿', '࿐', '࿑', '࿓', '࿔', '࿙']  # noqa: E501
-    closing_puncts = ['།', '༎', '༏', '༐', '༔', '༴', '༻', '༽', '༾', '࿚']  # noqa: E501
+    
     skip_chunk_types = [botok.vars.CharMarkers.CJK.name, botok.vars.CharMarkers.LATIN.name, botok.vars.CharMarkers.OTHER.name]   # noqa: E501
     # fmt: on
 
@@ -75,9 +74,9 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
                 found_invalid_token = True
                 continue
             
-            if any(punct in token_text for punct in opening_puncts):
+            if any(punct in token_text for punct in OPENING_PUNCTS):
                 curr_sent += token_text.strip()
-            elif any(punct in token_text for punct in closing_puncts):
+            elif any(punct in token_text for punct in CLOSING_PUNCTS):
                 curr_sent += token_text.strip()
                 curr_sent += "\n"
                 """add the current sentence to the sents_text"""
@@ -96,11 +95,10 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
         return sents_text
 
 def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
-    closing_puncts = ['།', '༎', '༏', '༐', '༔', '༴', '༻', '༽', '༾', '࿚']  
     text = bo_preprocess(text)
     
     """ Create a regular expression pattern from the list of punctuation marks """
-    pattern = '[' + ''.join(re.escape(p) for p in closing_puncts) + ']' 
+    pattern = '[' + ''.join(re.escape(p) for p in CLOSING_PUNCTS) + ']' 
     """ Split the text using the pattern"""
     parts = re.split('({})'.format(pattern), text)
     
@@ -109,7 +107,7 @@ def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
     
     sents_text = ""
     for text_part in text_parts:
-        if any(text_part.strip() == punct for punct in closing_puncts):
+        if any(text_part.strip() == punct for punct in CLOSING_PUNCTS):
             sents_text += text_part 
             continue 
         sents_text += "\n"
