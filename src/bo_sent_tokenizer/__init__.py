@@ -94,6 +94,20 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
 
         return sents_text
 
+
+def keep_tibetan_and_symbols(text):
+    SYMBOLS_TO_KEEP = ['\.', '!', '\?', '…', '¿', '¡', '»', '«', '\(', '\)', '\[', '\]', '\{', '\}', '<', '>', '“', '”', '‘', '’', '´', '¨']
+    """ Create a regex character set for the Tibetan range and the additional symbols"""
+    allowed_characters = ''.join(SYMBOLS_TO_KEEP) + '\u0F00-\u0FFF'
+    """ Compile a regular expression that matches characters not in the allowed set"""
+    pattern = '[^' + allowed_characters + ']+'
+    """ Replace characters not in the allowed set with an empty string"""
+    cleaned_text = re.sub(pattern, ' ', text)
+    cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
+    return cleaned_text
+
+
+
 def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
     text = bo_preprocess(text)
     
@@ -111,7 +125,7 @@ def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
             sents_text += text_part 
             continue 
         sents_text += "\n"
-        sents_text += text_part.strip()
+        sents_text += keep_tibetan_and_symbols(text_part).strip()
     return sents_text
 
 
