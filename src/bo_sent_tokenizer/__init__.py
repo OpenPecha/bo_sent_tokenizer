@@ -94,3 +94,29 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
             sents_text = re.sub(fr, to, sents_text)
 
         return sents_text
+
+def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
+    closing_puncts = ['།', '༎', '༏', '༐', '༔', '༴', '༻', '༽', '༾', '࿚']  
+    text = bo_preprocess(text)
+    
+    """ Create a regular expression pattern from the list of punctuation marks """
+    pattern = '[' + ''.join(re.escape(p) for p in closing_puncts) + ']' 
+    """ Split the text using the pattern"""
+    parts = re.split('({})'.format(pattern), text)
+    
+    """ Merge the parts to form the sentences."""
+    text_parts = [parts[i] + (parts[i+1] if i+1 < len(parts) else '') for i in range(0, len(parts), 2)]
+    
+    sents_text = ""
+    for text_part in text_parts:
+        if any(text_part.strip() == punct for punct in closing_puncts):
+            sents_text += text_part 
+            continue 
+        sents_text += "\n"
+        sents_text += text_part.strip()
+    return sents_text
+
+
+if __name__ == "__main__":
+    text = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ། ། ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། ཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།"
+    print(fast_tokenize(text))
