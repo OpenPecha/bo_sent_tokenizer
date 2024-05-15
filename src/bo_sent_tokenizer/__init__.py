@@ -121,7 +121,7 @@ def segment(text: str) -> SENT_PER_LINE_STR:
     current_sentence = []
 
     for idx, part in enumerate(parts):
-        if not part:
+        if not part.strip():
             continue
         
         if idx != 0 and part not in CLOSING_PUNCTS:
@@ -141,6 +141,12 @@ def segment(text: str) -> SENT_PER_LINE_STR:
     return segmented_text
 
 if __name__ == "__main__":
-    text = "མངོན་སུམ་ཚད་མས་གྲུབ་པ་འདི་བཞིན་ནོ།།༄༅།།ཡུལ་སྐྱེ་རྒུ་མདོ་ན་མཆིས་པའི་བཙན་པོ་ཁྲི་ལྡེ་སྲོང་བཙན་སྐབས་བརྐོས་པའི་རྡོ་བརྐོས་ཡི་གེར་དཔྱད་པ།"
+    from pathlib import Path 
+
+    text = Path("BO2383.txt").read_text()
+    import time 
+
+    start = time.time()
     output = segment(text)
-    print(output)
+    print(time.time() - start)
+    Path("BO2383_segmented.txt").write_text(output, encoding="utf-8")
