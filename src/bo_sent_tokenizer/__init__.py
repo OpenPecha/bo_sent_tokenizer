@@ -108,7 +108,7 @@ def keep_tibetan_and_symbols(text):
 
 
 
-def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
+def segment(text: str) -> SENT_PER_LINE_STR:
     text = bo_preprocess(text)
     
     """ Create a regular expression pattern from the list of punctuation marks """
@@ -132,4 +132,4 @@ def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
 
 if __name__ == "__main__":
     text = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ། ། ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། ཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།"
-    print(fast_tokenize(text))
+    print(segment(text))
