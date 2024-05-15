@@ -1,6 +1,6 @@
 from bo_sent_tokenizer import segment
 
-def test_fast_bo_sentence_tokenizer():
+def test_sent_segmenter():
     """ main test example"""
     input_string = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\n ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། ཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།"
     expected_output = 'ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།\nཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ།\nངའི་མིང་ལ་ ་ཟེར།\nཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།\n'
