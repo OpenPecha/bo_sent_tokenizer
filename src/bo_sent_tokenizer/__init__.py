@@ -120,11 +120,12 @@ def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
     text_parts = [parts[i] + (parts[i+1] if i+1 < len(parts) else '') for i in range(0, len(parts), 2)]
     
     sents_text = ""
-    for text_part in text_parts:
+    for idx,text_part in enumerate(text_parts):
         if any(text_part.strip() == punct for punct in CLOSING_PUNCTS):
             sents_text += text_part 
             continue 
-        sents_text += "\n"
+        if idx !=0:
+            sents_text += "\n"
         sents_text += keep_tibetan_and_symbols(text_part).strip()
     return sents_text
 
