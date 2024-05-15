@@ -110,9 +110,9 @@ def keep_tibetan_and_symbols(text):
 
 def segment(text: str) -> SENT_PER_LINE_STR:
     text = bo_preprocess(text)
-    
+    PUNCTS = OPENING_PUNCTS + CLOSING_PUNCTS
     """ Create a regular expression pattern from the list of punctuation marks """
-    pattern = '[' + ''.join(re.escape(p) for p in CLOSING_PUNCTS) + ']' 
+    pattern = '[' + ''.join(re.escape(p) for p in PUNCTS) + ']' 
     """ Split the text using the pattern"""
     parts = re.split('({})'.format(pattern), text)
     
@@ -141,12 +141,7 @@ def segment(text: str) -> SENT_PER_LINE_STR:
     return segmented_text
 
 if __name__ == "__main__":
-    from pathlib import Path 
-
-    text = Path("BO2383.txt").read_text()
-    import time 
-
-    start = time.time()
+    text = "ང་ཚོ་ཚང་མས་མཉམ་དུ་བང་སོ་དེ་ཉིད་སྔོག་འདོན་བྱེད་པའི་ཉིན་མོ་ཞིག་འཆར་རྒྱུའི་རེ་སྨོན་ཞུ་བཞིན་ཡོད་༄༅།།བོད་ཀྱི་གསོ་བ་རིག་པའི་གཞུང་ལུགས་དང་དེའི་སྐོར་གྱི་དཔྱད་བརྗོད།"
     output = segment(text)
-    print(time.time() - start)
-    Path("BO2383_segmented.txt").write_text(output, encoding="utf-8")
+    print(output)
+    
