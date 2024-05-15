@@ -117,23 +117,28 @@ def segment(text: str) -> SENT_PER_LINE_STR:
     parts = re.split('({})'.format(pattern), text)
     
     """ Merge the parts to form the sentences."""
-    sent = []
-    curr_sent = []
-    for idx,part in enumerate(parts):
-        if part == "":
+    sentences = []
+    current_sentence = []
+
+    for idx, part in enumerate(parts):
+        if not part:
             continue
-        if  idx != 0 and part not in CLOSING_PUNCTS:
-            curr_sent_text = "".join(curr_sent)
-            if not any(punct == curr_sent_text[0] for punct in OPENING_PUNCTS):
-                curr_sent_text += "\n"
-            sent.append(curr_sent_text)
-            curr_sent = []
-        curr_sent.append(keep_tibetan_and_symbols(part).strip())
-    if curr_sent:
-        sent.append(f"{''.join(curr_sent)}\n")
-    
-    sent_text = ''.join(sent)
-    return sent_text
+        
+        if idx != 0 and part not in CLOSING_PUNCTS:
+            current_sentence_text = "".join(current_sentence)
+            if not any(current_sentence_text.startswith(punct) for punct in OPENING_PUNCTS):
+                current_sentence_text += "\n"
+            sentences.append(current_sentence_text)
+            current_sentence = []
+        
+        current_sentence.append(keep_tibetan_and_symbols(part).strip())
+
+    if current_sentence:
+        sentences.append(f"{''.join(current_sentence)}\n")
+
+    """ Join all sentences into a single string"""
+    segmented_text = ''.join(sentences)
+    return segmented_text
 
 if __name__ == "__main__":
     text = "མངོན་སུམ་ཚད་མས་གྲུབ་པ་འདི་བཞིན་ནོ།།༄༅།།ཡུལ་སྐྱེ་རྒུ་མདོ་ན་མཆིས་པའི་བཙན་པོ་ཁྲི་ལྡེ་སྲོང་བཙན་སྐབས་བརྐོས་པའི་རྡོ་བརྐོས་ཡི་གེར་དཔྱད་པ།"
