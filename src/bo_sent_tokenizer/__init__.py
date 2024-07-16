@@ -108,28 +108,40 @@ def keep_tibetan_and_symbols(text):
 
 
 
-def fast_tokenize(text: str) -> SENT_PER_LINE_STR:
+def segment(text: str) -> SENT_PER_LINE_STR:
     text = bo_preprocess(text)
-    
+    PUNCTS = OPENING_PUNCTS + CLOSING_PUNCTS
     """ Create a regular expression pattern from the list of punctuation marks """
-    pattern = '[' + ''.join(re.escape(p) for p in CLOSING_PUNCTS) + ']' 
+    pattern = '[' + ''.join(re.escape(p) for p in PUNCTS) + ']' 
     """ Split the text using the pattern"""
     parts = re.split('({})'.format(pattern), text)
     
     """ Merge the parts to form the sentences."""
-    text_parts = [parts[i] + (parts[i+1] if i+1 < len(parts) else '') for i in range(0, len(parts), 2)]
-    
-    sents_text = ""
-    for idx,text_part in enumerate(text_parts):
-        if any(text_part.strip() == punct for punct in CLOSING_PUNCTS):
-            sents_text += text_part 
-            continue 
-        if idx !=0:
-            sents_text += "\n"
-        sents_text += keep_tibetan_and_symbols(text_part).strip()
-    return sents_text
+    sentences = []
+    current_sentence = []
 
+    for idx, part in enumerate(parts):
+        if not part.strip():
+            continue
+        
+        if idx != 0 and part not in CLOSING_PUNCTS:
+            current_sentence_text = "".join(current_sentence)
+            if not any(current_sentence_text.startswith(punct) for punct in OPENING_PUNCTS):
+                current_sentence_text += "\n"
+            sentences.append(current_sentence_text)
+            current_sentence = []
+        
+        current_sentence.append(keep_tibetan_and_symbols(part).strip())
+
+    if current_sentence:
+        sentences.append(f"{''.join(current_sentence)}\n")
+
+    """ Join all sentences into a single string"""
+    segmented_text = ''.join(sentences)
+    return segmented_text
 
 if __name__ == "__main__":
-    text = "ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ། ། ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ། ངའི་མིང་ལ་Thomas་ཟེར། ཁྱེད་དེ་རིང་(བདེ་མོ་)ཡིན་ནམ།"
-    print(fast_tokenize(text))
+    text = "ང་ཚོ་ཚང་མས་མཉམ་དུ་བང་སོ་དེ་ཉིད་སྔོག་འདོན་བྱེད་པའི་ཉིན་མོ་ཞིག་འཆར་རྒྱུའི་རེ་སྨོན་ཞུ་བཞིན་ཡོད་༄༅།།བོད་ཀྱི་གསོ་བ་རིག་པའི་གཞུང་ལུགས་དང་དེའི་སྐོར་གྱི་དཔྱད་བརྗོད།"
+    output = segment(text)
+    print(output)
+    
