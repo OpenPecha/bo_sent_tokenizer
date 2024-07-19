@@ -85,10 +85,12 @@ print(segmented_text) #Output:> 'ཁྱེད་དེ་རིང་བདེ�
 3. **Joining the Parts**:
    - Empty parts are ignored.
    - In some cases, closing punctuation appears immediately after opening punctuation, so care is taken not to split these instances.
-   - Example of a valid Tibetan sentence: ༄༅།།བོད་ཀྱི་གསོ་བ་རིག་པའི་གཞུང་ལུགས་དང་དེའི་སྐོར་གྱི་དཔྱད་བརྗོད།
+    Example of a valid Tibetan sentence: ༄༅།།བོད་ཀྱི་གསོ་བ་རིག་པའི་གཞུང་ལུགས་དང་དེའི་སྐོར་གྱི་དཔྱད་བརྗོད།
      - ༄༅ = opening punctuation
      - །། = closing punctuation
 
 4. **Filtering Text**: Only Tibetan characters and a few predefined symbols are retained; all other characters are removed.
 
-**Note:** Closing punctuation, opening punctuation, and predefined symbols are defined in the file `vars.py`
+**Note:**
+- Closing punctuation, opening punctuation, and predefined symbols are defined in the file `vars.py`
+- To have a better understanding of the code, refer to the test cases in `test_segmenter.py`
