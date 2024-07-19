@@ -19,7 +19,7 @@ Tibetan sentence tokenizer designed specifically for data preparation.
 
 - [@tenzin3](https://github.com/tenzin3)
 
-## Installation 
+## Installation
 
 ```py
 pip install git+https://github.com/OpenPecha/bo_sent_tokenizer.git
@@ -43,7 +43,11 @@ print(tokenized_text) #Output:> 'ཁྱེད་དེ་རིང་བདེ�
 
 ```
 
-### Explanation 
+### Explanation
+code is refered from [op_mt_tools](https://github.com/OpenPecha/mt-training-data-prep-tools/blob/main/src/op_mt_tools/tokenizers.py) and
+made minor changes to get the following desired output.
+
+### Output Explanation
 The text 'ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་ནམ།' is clean Tibetan text.
 
 The text 'ཁྱེད་དེ་རིང་བདེ་མོ་ཡིན་བབབབབབབབནམ།' contains an illegal token 'བབབབབབབབནམ'.
@@ -66,5 +70,25 @@ print(segmented_text) #Output:> 'ཁྱེད་དེ་རིང་བདེ�
 
 ```
 
-### Explanation 
-The sentence segmenter simply splits the text into sentences using predefined closing punctuation. If a sentence contains non-Tibetan words, they are replaced with spaces. Symbols are retained within the sentence.
+### Terms:
+
+**Closing Punctuation**: Characters in the Tibetan language that symbolize the end of a sentence, similar to a full stop in English.
+
+**Opening Punctuation**: Characters in the Tibetan language that symbolize the start of a sentence.
+
+### How Sentence Segmentation Works:
+
+1. **Preprocessing**: All carriage returns and new lines are removed from the string.
+
+2. **Splitting into Parts**: The preprocessed text is then split by closing punctuation using a regular expression.
+
+3. **Joining the Parts**:
+   - Empty parts are ignored.
+   - In some cases, closing punctuation appears immediately after opening punctuation, so care is taken not to split these instances.
+   - Example of a valid Tibetan sentence: ༄༅།།བོད་ཀྱི་གསོ་བ་རིག་པའི་གཞུང་ལུགས་དང་དེའི་སྐོར་གྱི་དཔྱད་བརྗོད།
+     - ༄༅ = opening punctuation
+     - །། = closing punctuation
+
+4. **Filtering Text**: Only Tibetan characters and a few predefined symbols are retained; all other characters are removed.
+
+**Note:** Closing punctuation, opening punctuation, and predefined symbols are defined in the file `vars.py`
