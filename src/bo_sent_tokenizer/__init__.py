@@ -1,7 +1,7 @@
 import re
 import botok
 
-from bo_sent_tokenizer.vars import SYMBOLS_TO_KEEP, OPENING_PUNCTS, CLOSING_PUNCTS
+from bo_sent_tokenizer.vars import SYMBOLS_TO_KEEP, OPENING_PUNCTS, CLOSING_PUNCTS, PREDIFENED_SYMBOLS
 from bo_sent_tokenizer.utils import SuppressOutput
 
 SENT_PER_LINE_STR = str  # sentence per line string
@@ -96,9 +96,8 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
 
 
 def keep_tibetan_and_symbols(text):
-    SYMBOLS_TO_KEEP = ['\.', '!', '\?', '…', '¿', '¡', '»', '«', '\(', '\)', '\[', '\]', '\{', '\}', '<', '>', '“', '”', '‘', '’', '´', '¨']
     """ Create a regex character set for the Tibetan range and the additional symbols"""
-    allowed_characters = ''.join(SYMBOLS_TO_KEEP) + '\u0F00-\u0FFF'
+    allowed_characters = ''.join(PREDIFENED_SYMBOLS) + '\u0F00-\u0FFF'
     """ Compile a regular expression that matches characters not in the allowed set"""
     pattern = '[^' + allowed_characters + ']+'
     """ Replace characters not in the allowed set with an empty string"""
