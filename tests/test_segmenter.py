@@ -55,3 +55,12 @@ def test_sent_segmenter():
     output = segment(input_string)
     assert output == expected_output
     
+
+def test_segment_and_keep_non_bo():
+    """tibetan with english"""
+    input_string = "ངའི་མིང་ལ་Thomas་ཟེར།"
+    expected_output = 'ངའི་མིང་ལ་Thomas་ཟེར།\n'
+    output = segment(input_string, keep_non_bo_and_symbols=True)
+    assert output == expected_output
+
+test_segment_and_keep_non_bo()

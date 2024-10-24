@@ -95,7 +95,7 @@ def tokenize(text: str) -> SENT_PER_LINE_STR:
         return sents_text
 
 
-def keep_tibetan_and_symbols(text):
+def filter_tibetan_and_symbols(text):
     """ Create a regex character set for the Tibetan range and the additional symbols"""
     allowed_characters = ''.join(PREDIFENED_SYMBOLS) + '\u0F00-\u0FFF'
     """ Compile a regular expression that matches characters not in the allowed set"""
@@ -107,7 +107,12 @@ def keep_tibetan_and_symbols(text):
 
 
 
-def segment(text: str) -> SENT_PER_LINE_STR:
+def segment(text: str, keep_non_bo_and_symbols:bool=False) -> SENT_PER_LINE_STR:
+    """
+    Input arguments: 
+        -text: str: The input text to be segmented into sentences.
+        -keep_non_bo_and_symbols: bool: If True, the output will contain non-Tibetan characters and symbols.
+    """
     text = bo_preprocess(text)
     PUNCTS = OPENING_PUNCTS + CLOSING_PUNCTS
     """ Create a regular expression pattern from the list of punctuation marks """
@@ -130,7 +135,10 @@ def segment(text: str) -> SENT_PER_LINE_STR:
             sentences.append(current_sentence_text)
             current_sentence = []
         
-        current_sentence.append(keep_tibetan_and_symbols(part).strip())
+        if keep_non_bo_and_symbols:
+            current_sentence.append(part.strip())
+        else:
+            current_sentence.append(filter_tibetan_and_symbols(part).strip())
 
     if current_sentence:
         sentences.append(f"{''.join(current_sentence)}\n")
