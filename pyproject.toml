@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "bo_sent_tokenizer"
 version = "0.0.1"
 authors = [
-  { name="OpenPecha", email="dev@openpecha.org" },
+  { name="Tsundue", email="tsundue@esukhia.org" },
 ]
 description = "Tibetan sentence tokenizer for segmenting Tibetan text into sentences"
 readme = "README.md"
