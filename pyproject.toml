@@ -8,13 +8,15 @@ version = "0.0.1"
 authors = [
   { name="OpenPecha", email="dev@openpecha.org" },
 ]
-description = "A small example package"
+description = "Tibetan sentence tokenizer for segmenting Tibetan text into sentences"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Natural Language :: Tibetan",
+    "Topic :: Text Processing :: Linguistic",
 ]
 
 dependencies = [
@@ -29,5 +31,6 @@ dev = [
 
 
 [project.urls]
-"Homepage" = "https://github.com/OpenPecha/openpecha-project-template"
-"Bug Tracker" = "https://github.com/OpenPecha/openpecha-project-template/issues"
+"Homepage" = "https://github.com/OpenPecha/bo_sent_tokenizer"
+"Bug Tracker" = "https://github.com/OpenPecha/bo_sent_tokenizer/issues"
+"Documentation" = "https://github.com/OpenPecha/bo_sent_tokenizer#readme"
